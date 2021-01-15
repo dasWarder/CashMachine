@@ -13,4 +13,8 @@ public class CurrencyManipulator {
     public String getCurrencyCode() {
         return currencyCode;
     }
+
+    public void addAmount(int denomination, int count) {
+        denominations.merge(denomination, count, Integer::sum);
+    }
 }
