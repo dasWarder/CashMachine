@@ -12,6 +12,7 @@ public class CashMachine {
             String[] digits = ConsoleHelper.getValidTwoDigits(code);// получаем номинал и количество купюр
             CurrencyManipulator cm = CurrencyManipulatorFactory.getManipulatorByCurrencyCode(code);// выбираем манипулятор
             cm.addAmount(Integer.parseInt(digits[0]), Integer.parseInt(digits[1]));// добавляем введенный номинал и количество купюр
+            ConsoleHelper.writeMessage(String.valueOf(cm.getTotalAmount()));
         } catch (Exception e) {
             e.printStackTrace();
         }

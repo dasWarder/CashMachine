@@ -17,4 +17,10 @@ public class CurrencyManipulator {
     public void addAmount(int denomination, int count) {
         denominations.merge(denomination, count, Integer::sum);
     }
+
+    public int getTotalAmount() {
+        return denominations.entrySet().stream()
+                .mapToInt(k -> k.getKey() * k.getValue())
+                .sum();
+    }
 }
