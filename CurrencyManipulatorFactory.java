@@ -17,4 +17,8 @@ public class CurrencyManipulatorFactory {
         map.put(currencyCode, manipulator);
         return manipulator;
     }
+
+    public static Collection<CurrencyManipulator> getAllCurrencyManipulators() {
+        return map.values();
+    }
 }

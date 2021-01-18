@@ -23,4 +23,8 @@ public class CurrencyManipulator {
                 .mapToInt(k -> k.getKey() * k.getValue())
                 .sum();
     }
+
+    public boolean hasMoney() {
+        return denominations.isEmpty()? false : true;
+    }
 }
