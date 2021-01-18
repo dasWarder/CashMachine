@@ -27,7 +27,7 @@ public class ConsoleHelper {
         writeMessage("Введите код валюты");
         String code = readString();
         while (code.length() != 3) {
-            writeMessage("Incorrect data! Try again.");
+            writeMessage("Неверные данные.");
             code = readString();
         }
         return code.toUpperCase();
@@ -50,6 +50,27 @@ public class ConsoleHelper {
 
         }
         return cash;
+    }
+
+    public static Operation askOperation() {
+
+        int operation = 0;
+        Operation resultOperation = null;
+
+        while(true) {
+            writeMessage("Введите операцию:");
+            try {
+                operation = Integer.parseInt(readString());
+                resultOperation = Operation.getAllowableOperationByOrdinal(operation);
+                break;
+            } catch (Exception e) {
+                writeMessage("Что-то пошло не так. Попробуйте еще раз.");
+                continue;
+            }
+        }
+
+
+        return resultOperation;
     }
 
 }
