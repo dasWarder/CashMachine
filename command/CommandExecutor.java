@@ -1,6 +1,8 @@
 package com.javarush.task.task26.task2613.command;
 
 import com.javarush.task.task26.task2613.Operation;
+import com.javarush.task.task26.task2613.exception.InterruptOperationException;
+
 import java.util.*;
 
 public class CommandExecutor {
@@ -19,7 +21,7 @@ public class CommandExecutor {
 
     }
 
-    public static final void execute(Operation operation) {
+    public static final void execute(Operation operation) throws InterruptOperationException {
         if(allKnownCommandsMap.containsKey(operation)) {
             allKnownCommandsMap.get(operation).execute();
         }

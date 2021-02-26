@@ -1,9 +1,10 @@
 package com.javarush.task.task26.task2613;
 
+import com.javarush.task.task26.task2613.exception.InterruptOperationException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.regex.Pattern;
 
 public class ConsoleHelper {
     private static BufferedReader bis = new BufferedReader(new InputStreamReader(System.in));
@@ -12,10 +13,13 @@ public class ConsoleHelper {
         System.out.println(message);
     }
 
-    public static String readString() {
+    public static String readString() throws InterruptOperationException {
         String line = null;
         try {
             line = bis.readLine();
+            if(line.toLowerCase().equals("exit")){
+                throw new InterruptOperationException();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -23,7 +27,7 @@ public class ConsoleHelper {
         return line;
     }
 
-    public static String askCurrencyCode() {
+    public static String askCurrencyCode() throws InterruptOperationException {
         writeMessage("Введите код валюты");
         String code = readString();
         while (code.length() != 3) {
@@ -33,7 +37,7 @@ public class ConsoleHelper {
         return code.toUpperCase();
     }
 
-    public static String[] getValidTwoDigits(String currencyCode) {
+    public static String[] getValidTwoDigits(String currencyCode) throws InterruptOperationException {
         String[] cash;
 
         while (true) {
@@ -52,17 +56,18 @@ public class ConsoleHelper {
         return cash;
     }
 
-    public static Operation askOperation() {
+    public static Operation askOperation() throws InterruptOperationException{
 
         int operation = 0;
         Operation resultOperation = null;
 
-        while(true) {
+        while (true) {
             writeMessage("Введите операцию:");
             try {
-                operation = Integer.parseInt(readString());
-                resultOperation = Operation.getAllowableOperationByOrdinal(operation);
-                break;
+                    String operationStr = readString().toLowerCase();
+                    operation = Integer.parseInt(operationStr);
+                    resultOperation = Operation.getAllowableOperationByOrdinal(operation);
+                    break;
             } catch (Exception e) {
                 writeMessage("Что-то пошло не так. Попробуйте еще раз.");
                 continue;
