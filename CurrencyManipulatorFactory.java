@@ -1,6 +1,8 @@
 package com.javarush.task.task26.task2613;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CurrencyManipulatorFactory {
     private static Map<String, CurrencyManipulator> map = new HashMap<>();
@@ -9,13 +11,12 @@ public class CurrencyManipulatorFactory {
     }
 
     public static CurrencyManipulator getManipulatorByCurrencyCode(String currencyCode) {
-        if(map.containsKey(currencyCode)) {
-            return map.entrySet().stream().filter(k -> k.getKey().equals(currencyCode))
-                    .map(k -> k.getValue()).findFirst().orElse(null);
+        currencyCode = currencyCode.toUpperCase();
+        if (!map.containsKey(currencyCode)) {
+            CurrencyManipulator manipulator = new CurrencyManipulator(currencyCode);
+            map.put(manipulator.getCurrencyCode(), manipulator);
         }
-        CurrencyManipulator manipulator = new CurrencyManipulator(currencyCode);
-        map.put(currencyCode, manipulator);
-        return manipulator;
+        return map.get(currencyCode);
     }
 
     public static Collection<CurrencyManipulator> getAllCurrencyManipulators() {

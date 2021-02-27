@@ -1,11 +1,17 @@
 package com.javarush.task.task26.task2613.command;
 
+import com.javarush.task.task26.task2613.CashMachine;
 import com.javarush.task.task26.task2613.ConsoleHelper;
 import com.javarush.task.task26.task2613.exception.InterruptOperationException;
+import org.jsoup.select.Evaluator;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class LoginCommand implements Command {
-    private String cardNumber = "123456789012";
-    private String cardPin = "1234";
+    String packagePart = CashMachine.class.getPackage().getName();
+
+    private ResourceBundle validCreditCards = ResourceBundle.getBundle(packagePart + ".resources.verifiedCards", Locale.ENGLISH);
 
 
     @Override
@@ -22,7 +28,7 @@ public class LoginCommand implements Command {
                 ConsoleHelper.writeMessage("Вы ввели некорректные данные! Попробуйте снова!");
                 continue;
             } else {
-                if(cardNum.equals(cardNumber) && cardPinCode.equals(cardPin)) {
+                if(validCreditCards.containsKey(cardNum)) {
                     ConsoleHelper.writeMessage("Валидация прошла успешно!");
                     break;
                 } else {

@@ -14,68 +14,64 @@ public class ConsoleHelper {
     }
 
     public static String readString() throws InterruptOperationException {
-        String line = null;
         try {
-            line = bis.readLine();
-            if(line.toLowerCase().equals("exit")){
+            String text = bis.readLine();
+            if ("exit".equals(text.toLowerCase())) {
                 throw new InterruptOperationException();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return line;
+            return text;
+        } catch (IOException ignored) { //suppose it will never occur
+        }
+        return null;
     }
 
     public static String askCurrencyCode() throws InterruptOperationException {
-        writeMessage("Введите код валюты");
-        String code = readString();
-        while (code.length() != 3) {
-            writeMessage("Неверные данные.");
-            code = readString();
+        while (true) {
+            ConsoleHelper.writeMessage("Please choose a currency code, for example USD");
+            String currencyCode = ConsoleHelper.readString();
+            if (currencyCode == null || currencyCode.trim().length() != 3) {
+                ConsoleHelper.writeMessage("Please specify valid data.");
+                continue;
+            }
+            return currencyCode.trim().toUpperCase();
         }
-        return code.toUpperCase();
     }
 
     public static String[] getValidTwoDigits(String currencyCode) throws InterruptOperationException {
-        String[] cash;
-
         while (true) {
-            writeMessage("Пожалуйста введите два целых положительных числа!");
-
-            try {
-                cash = readString().split(" ");
-                if (Integer.parseInt(cash[0]) > 0 && Integer.parseInt(cash[1]) > 0 && cash.length == 2) break;
-            } catch (Exception e) {
-                writeMessage("Код должен содержать 2 положительных числа!");
-                continue;
+            ConsoleHelper.writeMessage(String.format("Please specify integer denomination and integer count. For example '10 3' means 30 %s", currencyCode));
+            String s = ConsoleHelper.readString();
+            String[] split = null;
+            if (s == null || (split = s.split(" ")).length != 2) {
+                ConsoleHelper.writeMessage("Please specify valid data.");
+            } else {
+                try {
+                    if (Integer.parseInt(split[0]) <= 0 || Integer.parseInt(split[1]) <= 0)
+                        ConsoleHelper.writeMessage("Please specify valid data.");
+                } catch (NumberFormatException e) {
+                    ConsoleHelper.writeMessage("Please specify valid data.");
+                    continue;
+                }
+                return split;
             }
-            writeMessage("Код должен содержать 2 положительных числа!");
-
         }
-        return cash;
     }
 
-    public static Operation askOperation() throws InterruptOperationException{
-
-        int operation = 0;
-        Operation resultOperation = null;
-
+    public static Operation askOperation() throws InterruptOperationException {
         while (true) {
-            writeMessage("Введите операцию:");
+            ConsoleHelper.writeMessage("Please choose an operation desired or type 'EXIT' for exiting");
+            ConsoleHelper.writeMessage("\t 1 - operation.INFO");
+            ConsoleHelper.writeMessage("\t 2 - operation.DEPOSIT");
+            ConsoleHelper.writeMessage("\t 3 - operation.WITHDRAW");
+            ConsoleHelper.writeMessage("\t 4 - operation.EXIT");
+            Integer i = Integer.parseInt(ConsoleHelper.readString().trim());
             try {
-                    String operationStr = readString().toLowerCase();
-                    operation = Integer.parseInt(operationStr);
-                    resultOperation = Operation.getAllowableOperationByOrdinal(operation);
-                    break;
-            } catch (Exception e) {
-                writeMessage("Что-то пошло не так. Попробуйте еще раз.");
-                continue;
+                return Operation.getAllowableOperationByOrdinal(i);
+            } catch (IllegalArgumentException e) {
+                ConsoleHelper.writeMessage("Please specify valid data.");
             }
         }
-
-
-        return resultOperation;
     }
 
 }

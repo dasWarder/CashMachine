@@ -3,14 +3,14 @@ package com.javarush.task.task26.task2613;
 import com.javarush.task.task26.task2613.exception.NotEnoughMoneyException;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class CurrencyManipulator {
     private String currencyCode;
-    private Map<Integer, Integer> denominations = new TreeMap<>(Collections.reverseOrder());
+    private Map<Integer, Integer> denominations;
 
     public CurrencyManipulator(String currencyCode) {
         this.currencyCode = currencyCode;
+        this.denominations = new TreeMap<>();
     }
 
     public String getCurrencyCode() {
@@ -18,21 +18,27 @@ public class CurrencyManipulator {
     }
 
     public void addAmount(int denomination, int count) {
-        denominations.merge(denomination, count, Integer::sum);
+        if (denominations.containsKey(denomination)) {
+            denominations.put(denomination, denominations.get(denomination) + count);
+        } else {
+            denominations.put(denomination, count);
+        }
     }
 
     public int getTotalAmount() {
-        return denominations.entrySet().stream()
-                .mapToInt(k -> k.getKey() * k.getValue())
-                .sum();
-    }
-
-    public boolean isAmountAvailable(int expectedAmount) {
-        return getTotalAmount() >= expectedAmount;
+        int totalAmount = 0;
+        for (Integer denomination : denominations.keySet()) {
+            totalAmount += denomination * denominations.get(denomination);
+        }
+        return totalAmount;
     }
 
     public boolean hasMoney() {
-        return denominations.isEmpty() ? false : true;
+        return !denominations.isEmpty();
+    }
+
+    public boolean isAmountAvailable(int expectedAmount) {
+        return expectedAmount <= getTotalAmount();
     }
 
     public Map<Integer, Integer> withdrawAmount(int expectedAmount) throws NotEnoughMoneyException {
