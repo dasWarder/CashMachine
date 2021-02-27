@@ -5,9 +5,11 @@ import com.javarush.task.task26.task2613.ConsoleHelper;
 import com.javarush.task.task26.task2613.exception.InterruptOperationException;
 import java.util.ResourceBundle;
 
+import static com.javarush.task.task26.task2613.CashMachine.RESOURCE_PATH;
+
 class LoginCommand implements Command {
-    private ResourceBundle validCreditCards = ResourceBundle.getBundle(CashMachine.class.getPackage().getName() + ".resources.verifiedCards");
-    private ResourceBundle res = ResourceBundle.getBundle(CashMachine.class.getPackage().getName() + ".resources.login");
+    private ResourceBundle validCreditCards = ResourceBundle.getBundle(RESOURCE_PATH + "verifiedCards");
+    private ResourceBundle res = ResourceBundle.getBundle(RESOURCE_PATH + "login");
 
 
     @Override

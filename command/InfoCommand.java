@@ -7,9 +7,11 @@ import com.javarush.task.task26.task2613.CurrencyManipulatorFactory;
 
 import java.util.ResourceBundle;
 
+import static com.javarush.task.task26.task2613.CashMachine.RESOURCE_PATH;
+
 class InfoCommand implements Command {
     private ResourceBundle res = ResourceBundle
-            .getBundle(CashMachine.class.getPackage().getName() + ".resources.info_en");
+            .getBundle(RESOURCE_PATH + "info_en");
 
     @Override
     public void execute() {
