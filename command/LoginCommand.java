@@ -3,39 +3,38 @@ package com.javarush.task.task26.task2613.command;
 import com.javarush.task.task26.task2613.CashMachine;
 import com.javarush.task.task26.task2613.ConsoleHelper;
 import com.javarush.task.task26.task2613.exception.InterruptOperationException;
-import org.jsoup.select.Evaluator;
-
-import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class LoginCommand implements Command {
-    String packagePart = CashMachine.class.getPackage().getName();
-
-    private ResourceBundle validCreditCards = ResourceBundle.getBundle(packagePart + ".resources.verifiedCards", Locale.ENGLISH);
+class LoginCommand implements Command {
+    private ResourceBundle validCreditCards = ResourceBundle.getBundle(CashMachine.class.getPackage().getName() + ".resources.verifiedCards");
+    private ResourceBundle res = ResourceBundle.getBundle(CashMachine.class.getPackage().getName() + ".resources.login");
 
 
     @Override
     public void execute() throws InterruptOperationException {
-
+        ConsoleHelper.writeMessage(res.getString("before"));
 
         while (true) {
-            ConsoleHelper.writeMessage("Введите номер карты и пин:");
-            String cardNum = ConsoleHelper.readString();
-            String cardPinCode = ConsoleHelper.readString();
-
-            if(cardNum == null || !cardNum.trim().matches("\\d{12}") ||
-                    cardPinCode == null || !cardPinCode.trim().matches("\\d{4}")) {
-                ConsoleHelper.writeMessage("Вы ввели некорректные данные! Попробуйте снова!");
-                continue;
+            ConsoleHelper.writeMessage(res.getString("specify.data"));
+            String creditCardNumber = ConsoleHelper.readString();
+            String pinStr = ConsoleHelper.readString();
+            if (creditCardNumber == null || (creditCardNumber = creditCardNumber.trim()).length() != 12 ||
+                    pinStr == null || (pinStr = pinStr.trim()).length() != 4) {
+                ConsoleHelper.writeMessage(res.getString("try.again.with.details"));
             } else {
-                if(validCreditCards.containsKey(cardNum)) {
-                    ConsoleHelper.writeMessage("Валидация прошла успешно!");
-                    break;
-                } else {
-                    ConsoleHelper.writeMessage("Ошибка валидации! Попробуйте еще раз!");
-                    continue;
+                try {
+                    if (validCreditCards.containsKey(creditCardNumber) && pinStr.equals(validCreditCards.getString(creditCardNumber))) {
+                        ConsoleHelper.writeMessage(String.format(res.getString("success.format"), creditCardNumber));
+                        break;
+                    } else {
+                        ConsoleHelper.writeMessage(String.format(res.getString("not.verified.format"), creditCardNumber));
+                        ConsoleHelper.writeMessage(res.getString("try.again.or.exit"));
+                    }
+                } catch (NumberFormatException e) {
+                    ConsoleHelper.writeMessage(res.getString("try.again.with.details"));
                 }
             }
         }
+
     }
 }
